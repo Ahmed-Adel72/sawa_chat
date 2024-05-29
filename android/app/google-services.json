@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "439685552158",
+    "project_id": "sawa-chat-30e8c",
+    "storage_bucket": "sawa-chat-30e8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439685552158:android:e3368933b633e99148760f",
+        "android_client_info": {
+          "package_name": "com.example.sawa_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUMcCzUpHEKcOaP1nb73qzgpz0zPmNiWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
