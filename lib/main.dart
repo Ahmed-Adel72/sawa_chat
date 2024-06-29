@@ -6,14 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyBUMcCzUpHEKcOaP1nb73qzgpz0zPmNiWo',
-    projectId: 'sawa-chat-30e8c',
-    storageBucket: 'sawa-chat-30e8c.appspot.com',
-    appId: 'com.example.sawa_chat',
-    messagingSenderId: '1:439685552158:android:e3368933b633e99148760f',
-  ));
+  await Firebase.initializeApp();
   await ScreenUtil.ensureScreenSize();
   runApp(SawaApp(
     appRouter: AppRouter(),
