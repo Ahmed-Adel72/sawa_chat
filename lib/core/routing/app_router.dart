@@ -8,13 +8,7 @@ class AppRouter {
       case Routes.loginScreen:
         return MaterialPageRoute(builder: (_) => LoginScreen());
       default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
-          ),
-        );
+        return null;
     }
   }
 }
