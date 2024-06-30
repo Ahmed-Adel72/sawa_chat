@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
-import 'package:sawa_chat/core/theming/app_text_styles.dart';
 
 class AppTextButton extends StatelessWidget {
   final String? buttonText;
