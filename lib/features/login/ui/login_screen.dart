@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sawa_chat/core/theming/app_colors.dart';
+import 'package:sawa_chat/core/theming/app_text_styles.dart';
+import 'package:sawa_chat/core/widgets/app_text_button.dart';
 import 'package:sawa_chat/core/widgets/app_text_form_field.dart';
+import 'package:sawa_chat/features/login/ui/widgets/email_and_password.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   final formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,34 +27,12 @@ class LoginScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  height: 280.h,
-                ),
-                AppTextFormField(
-                  controller: emailController,
-                  hintText: "Email",
-                  isObscureText: false,
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a vaild email';
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 28.h,
-                ),
-                AppTextFormField(
-                  controller: passwordController,
-                  hintText: "Password",
-                  isObscureText: true,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a vaild password';
-                    }
-                  },
-                ),
+                EmailAndPassword(),
+                AppTextButton(
+                  buttonText: 'Login',
+                  onPressed: () {},
+                  textStyle: AppTextStyles.font25MoreLightGrayBold,
+                )
               ],
             ),
           ),
