@@ -9,9 +9,19 @@ class AppTextStyles {
     fontWeight: AppFontWeight.bold,
     color: AppColors.darkgray,
   );
-  static TextStyle font25MoreLightGrayBold = TextStyle(
+  static TextStyle font22MoreLightGrayBold = TextStyle(
     fontSize: 22.sp,
     fontWeight: AppFontWeight.bold,
     color: AppColors.moreLightGray,
+  );
+  static TextStyle font18GrayBold = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: AppFontWeight.bold,
+    color: AppColors.gray,
+  );
+  static TextStyle font18MainOrangeBold = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: AppFontWeight.bold,
+    color: AppColors.mainOrange,
   );
 }
