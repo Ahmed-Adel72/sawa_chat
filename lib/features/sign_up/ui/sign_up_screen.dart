@@ -3,11 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sawa_chat/core/theming/app_text_styles.dart';
 import 'package:sawa_chat/core/widgets/app_text_button.dart';
 import 'package:sawa_chat/features/login/ui/widgets/dont_have_account.dart';
-import 'package:sawa_chat/features/login/ui/widgets/email_and_password.dart';
+import 'package:sawa_chat/features/sign_up/ui/widgets/already_have_account.dart';
+import 'package:sawa_chat/features/sign_up/ui/widgets/sign_up_form.dart';
 
 // ignore: must_be_immutable
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
 
   final formKey = GlobalKey<FormState>();
 
@@ -16,7 +17,7 @@ class LoginScreen extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
-        image: AssetImage("assets/images/login.png"),
+        image: AssetImage("assets/images/register.png"),
         fit: BoxFit.fill,
       )),
       child: Scaffold(
@@ -26,16 +27,16 @@ class LoginScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                EmailAndPassword(),
+                SignUpForm(),
                 AppTextButton(
-                  buttonText: 'Login',
+                  buttonText: 'Sign Up',
                   onPressed: () {},
                   textStyle: AppTextStyles.font22MoreLightGrayBold,
                 ),
                 SizedBox(
                   height: 15.h,
                 ),
-                const DontHaveAccountText(),
+                const AlreadyHaveAccountText(),
               ],
             ),
           ),
