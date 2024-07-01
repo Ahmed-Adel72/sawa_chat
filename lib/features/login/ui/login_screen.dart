@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sawa_chat/core/theming/app_text_styles.dart';
 import 'package:sawa_chat/core/widgets/app_text_button.dart';
+import 'package:sawa_chat/features/login/ui/widgets/dont_have_account.dart';
 import 'package:sawa_chat/features/login/ui/widgets/email_and_password.dart';
 
 // ignore: must_be_immutable
@@ -34,21 +35,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(
                   height: 15.h,
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Don\'t have an acount?',
-                        style: AppTextStyles.font18GrayBold,
-                      ),
-                      TextSpan(
-                        text: ' Sign Up',
-                        style: AppTextStyles.font18MainOrangeBold,
-                      ),
-                    ],
-                  ),
-                )
+                const DontHaveAccountText(),
               ],
             ),
           ),
