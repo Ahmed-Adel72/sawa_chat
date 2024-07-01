@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
 import 'package:sawa_chat/features/home/ui/home_screen.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
