@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
-import 'package:sawa_chat/features/home/ui/home_screen.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_states.dart';
 
@@ -19,17 +19,16 @@ class SignUpCubit extends Cubit<SignUpStates> {
   final formKey = GlobalKey<FormState>();
 
   bool isLoadingSignUp = false;
-  void userSignUp({required context}) {
+  Future<void> userSignUp({required context}) async {
     emit(UserSignUpLoadingState());
     isLoadingSignUp = true;
-    FirebaseAuth.instance
+    await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
     )
         .then((value) {
       emit(UserSignUpSuccessState());
-      isLoadingSignUp = false;
       userCreate(
         name: nameController.text,
         email: emailController.text,
@@ -51,12 +50,12 @@ class SignUpCubit extends Cubit<SignUpStates> {
     });
   }
 
-  void userCreate({
+  Future<void> userCreate({
     required String name,
     required String email,
     required String uId,
     required context,
-  }) {
+  }) async {
     UserModel model = UserModel(
       name: name,
       email: email,
@@ -64,25 +63,21 @@ class SignUpCubit extends Cubit<SignUpStates> {
       bio: 'Hey htere! i\'m using sawa chat',
       image: '',
     );
-    FirebaseFirestore.instance
-        .collection('user')
+    await FirebaseFirestore.instance
+        .collection('users')
         .doc(uId)
         .set(model.toMap())
         .then((value) {
+      isLoadingSignUp = false;
       Fluttertoast.showToast(
-              msg: 'signup Successful',
+              msg: 'Signup Successfully, Please login',
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: AppColors.lightGray,
               timeInSecForIosWeb: 5,
               textColor: Colors.black)
           .then((value) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-            (route) => false);
+        Navigator.pushReplacementNamed(context, Routes.loginScreen);
       });
 
       emit(UserCreateSuccessState());
