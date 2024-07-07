@@ -13,3 +13,9 @@ class GetAllUsersLoadingState extends LayoutStates {}
 class GetAllUsersSuccessState extends LayoutStates {}
 
 class GetAllUsersErrorState extends LayoutStates {}
+
+class GetUserDataLoadingState extends LayoutStates {}
+
+class GetUserDataSuccessState extends LayoutStates {}
+
+class GetUserDataErrorState extends LayoutStates {}

@@ -11,6 +11,11 @@ class AppTextStyles {
   );
   static TextStyle font18DarkGrayBold = TextStyle(
     fontSize: 18.sp,
+    fontWeight: AppFontWeight.bold,
+    color: AppColors.darkgray,
+  );
+  static TextStyle font18DarkGrayRegular = TextStyle(
+    fontSize: 18.sp,
     fontWeight: AppFontWeight.regular,
     color: AppColors.darkgray,
   );
