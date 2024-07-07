@@ -18,6 +18,7 @@ class LayoutScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = LayoutCubit.get(context);
+        var myData = LayoutCubit.get(context).myData;
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
@@ -43,13 +44,17 @@ class LayoutScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: InkWell(
                   onTap: () {
-                    LayoutCubit.get(context).getMyData();
                     context.pushNamed(Routes.profileScreen);
                   },
-                  child: const CircleAvatar(
-                    radius: 20,
-                    backgroundColor: AppColors.mainOrange,
-                  ),
+                  child: myData?.image != null
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage('${myData!.image}'),
+                          radius: 20,
+                        )
+                      : const CircleAvatar(
+                          backgroundColor: AppColors.mainOrange,
+                          radius: 20,
+                        ),
                 ),
               ),
             ],
