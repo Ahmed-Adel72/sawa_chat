@@ -35,34 +35,15 @@ class LayoutCubit extends Cubit<LayoutStates> {
     await FirebaseFirestore.instance.collection('users').get().then((value) {
       value.docs.forEach(
         (element) {
-          allUser.add(UserModel.fromJson(element.data()));
+          // allUser = [];
+          if (element.data()['uId'] != myData!.uId)
+            allUser.add(UserModel.fromJson(element.data()));
         },
       );
       print(allUser);
       emit(GetAllUsersSuccessState());
     }).catchError((error) {
       emit(GetAllUsersErrorState());
-    });
-  }
-
-  UserModel? userData;
-  bool isLoadUserData = false;
-  Future<void> getUserData({required String uid}) async {
-    emit(GetUserDataLoadingState());
-    bool isLoadUserData = true;
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .get()
-        .then((value) {
-      print(value.data());
-      userData = UserModel.fromJson(value.data()!);
-      emit(GetUserDataSuccessState());
-      isLoadUserData = false;
-    }).catchError((error) {
-      emit(GetUserDataErrorState());
-      isLoadUserData = false;
     });
   }
 }

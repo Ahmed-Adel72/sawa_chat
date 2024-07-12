@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sawa_chat/core/constants/app_constants.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
+import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
-import 'package:sawa_chat/features/layout/ui/layout_screen.dart';
 import 'package:sawa_chat/features/login/logic/cubit/login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
@@ -39,12 +38,7 @@ class LoginCubit extends Cubit<LoginStates> {
               textColor: Colors.black)
           .then((value) {
         isLoginLoading = false;
-        Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const LayoutScreen(),
-            ),
-            (route) => false);
+        Navigator.pushReplacementNamed(context, Routes.layoutScreen);
       });
       emit(UserLoginSuccessState());
     }).catchError((error) {

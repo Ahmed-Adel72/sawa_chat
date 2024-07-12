@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/core/helpers/extensions.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
@@ -21,7 +22,10 @@ class LayoutScreen extends StatelessWidget {
         var myData = LayoutCubit.get(context).myData;
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              CacheHelper.deleteData('uId');
+              context.pushReplacementNamed(Routes.loginScreen);
+            },
             backgroundColor: AppColors.mainOrange,
             clipBehavior: Clip.hardEdge,
             child: Icon(
@@ -46,9 +50,9 @@ class LayoutScreen extends StatelessWidget {
                   onTap: () {
                     context.pushNamed(Routes.profileScreen);
                   },
-                  child: myData?.image != null
+                  child: myData?.image != null && myData!.image!.isNotEmpty
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage('${myData!.image}'),
+                          backgroundImage: NetworkImage('${myData.image}'),
                           radius: 20,
                         )
                       : const CircleAvatar(

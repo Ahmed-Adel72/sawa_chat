@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
+import 'package:sawa_chat/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:sawa_chat/features/chat/ui/chat_screen.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_cubit.dart';
 import 'package:sawa_chat/features/layout/ui/layout_screen.dart';
@@ -28,10 +29,13 @@ class AppRouter {
                   child: const ProfileScreen(),
                 ));
       case Routes.chatScreen:
+        final uid = settings.arguments as String;
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LayoutCubit(),
-                  child: const ChatScreen(),
+                  create: (context) => ChatCubit(),
+                  child: ChatScreen(
+                    uid: uid,
+                  ),
                 ));
       case Routes.loginScreen:
         return MaterialPageRoute(
