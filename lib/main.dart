@@ -17,8 +17,8 @@ void main() async {
   await CacheHelper.init();
   Bloc.observer = MyBlocObserver();
 
-  uId = CacheHelper.getData(key: 'uId');
-  if (uId.isNotEmpty) {
+  uId = CacheHelper.getData(key: 'uId') ?? '';
+  if (uId.isNotEmpty && uId != null) {
     initialRoute = Routes.layoutScreen;
   } else {
     initialRoute = Routes.loginScreen;

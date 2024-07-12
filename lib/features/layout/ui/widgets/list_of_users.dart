@@ -25,8 +25,10 @@ class ListOfUsers extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: InkWell(
               onTap: () {
-                cubit.getUserData(uid: '${allUsers[index].uId}');
-                context.pushNamed(Routes.chatScreen);
+                // cubit.userData = allUsers[index];
+                // print(cubit.userData!.name);
+                context.pushNamed(Routes.chatScreen,
+                    arguments: allUsers[index].uId);
               },
               child: Row(
                 children: [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sawa_chat/core/routing/app_router.dart';
-import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
 import 'package:sawa_chat/main.dart';
 
