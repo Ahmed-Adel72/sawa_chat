@@ -61,7 +61,8 @@ class SignUpCubit extends Cubit<SignUpStates> {
       email: email,
       uId: uId,
       bio: 'Hey htere! i\'m using sawa chat',
-      image: '',
+      image:
+          'https://as2.ftcdn.net/v2/jpg/05/89/93/27/500_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg',
     );
     await FirebaseFirestore.instance
         .collection('users')

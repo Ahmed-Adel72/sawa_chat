@@ -16,57 +16,61 @@ class TextFormAndSendButton extends StatelessWidget {
         var cubit = ChatCubit.get(context);
         var userDate = ChatCubit.get(context).userData;
 
-        return Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: AppColors.lightGray,
-              width: 1,
+        return Padding(
+          padding: EdgeInsets.only(bottom: 10.h),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: AppColors.lightGray,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(20),
             ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: Padding(
-            padding: EdgeInsets.only(left: 12.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    onChanged: (text) {
-                      cubit.updateTypingStatus(
-                        receiverId: '${userDate?.uId}',
-                        isTyping: text.isNotEmpty,
-                      );
-                    },
-                    controller: cubit.messageController,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '  Type your message here...',
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Padding(
+              padding: EdgeInsets.only(left: 12.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      cursorColor: AppColors.mainOrange,
+                      onChanged: (text) {
+                        cubit.updateTypingStatus(
+                          receiverId: '${userDate?.uId}',
+                          isTyping: text.isNotEmpty,
+                        );
+                      },
+                      controller: cubit.messageController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '  Type your message here...',
+                      ),
                     ),
                   ),
-                ),
-                cubit.isTypingRealy
-                    ? Container(
-                        color: AppColors.mainOrange,
-                        child: MaterialButton(
-                          minWidth: 1,
-                          onPressed: () {
-                            cubit.sendMessage(
-                              receiverId: '${userDate?.uId}',
-                            );
-                            cubit.updateTypingStatus(
-                              receiverId: '${userDate?.uId}',
-                              isTyping: false,
-                            );
-                          },
-                          child: Icon(
-                            Icons.send_rounded,
-                            color: AppColors.moreLightGray,
-                            size: 20.sp,
+                  cubit.isTypingRealy
+                      ? Container(
+                          color: AppColors.mainOrange,
+                          child: MaterialButton(
+                            minWidth: 1,
+                            onPressed: () {
+                              cubit.sendMessage(
+                                receiverId: '${userDate?.uId}',
+                              );
+                              cubit.updateTypingStatus(
+                                receiverId: '${userDate?.uId}',
+                                isTyping: false,
+                              );
+                            },
+                            child: Icon(
+                              Icons.send_rounded,
+                              color: AppColors.moreLightGray,
+                              size: 20.sp,
+                            ),
                           ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ],
+                        )
+                      : const SizedBox(),
+                ],
+              ),
             ),
           ),
         );

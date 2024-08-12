@@ -4,6 +4,11 @@ class UserModel {
   String? uId;
   String? bio;
   String? image;
+  String? lastMessage;
+  String? senderId;
+  bool? isTyping;
+
+  DateTime? timestamp;
 
   UserModel({
     this.name,
@@ -11,6 +16,10 @@ class UserModel {
     this.uId,
     this.bio,
     this.image,
+    this.lastMessage,
+    this.senderId,
+    this.timestamp,
+    this.isTyping,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -18,6 +27,11 @@ class UserModel {
     uId = json['uId'];
     bio = json['bio'];
     image = json['image'];
+    lastMessage = json['lastMessage'];
+    senderId = json['senderId'];
+    isTyping = json['isTyping'];
+
+    timestamp = json['timestamp']?.toDate();
   }
 
   Map<String, dynamic> toMap() {
@@ -27,6 +41,10 @@ class UserModel {
       'uId': uId,
       'bio': bio,
       'image': image,
+      'lastMessage': lastMessage,
+      'timestamp': timestamp,
+      'senderId': senderId,
+      'isTyping': isTyping,
     };
   }
 }

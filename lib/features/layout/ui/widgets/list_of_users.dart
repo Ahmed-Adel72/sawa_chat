@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:sawa_chat/core/helpers/extensions.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';
@@ -17,41 +18,76 @@ class ListOfUsers extends StatelessWidget {
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = LayoutCubit.get(context);
         var allUsers = LayoutCubit.get(context).allUser;
         return ListView.separated(
           physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: InkWell(
-              onTap: () {
-                // cubit.userData = allUsers[index];
-                // print(cubit.userData!.name);
-                context.pushNamed(Routes.chatScreen,
-                    arguments: allUsers[index].uId);
-              },
-              child: Row(
-                children: [
-                  allUsers[index].image != null &&
-                          allUsers[index].image!.isNotEmpty
-                      ? CircleAvatar(
-                          backgroundImage:
-                              NetworkImage('${allUsers[index].image}'),
-                        )
-                      : const CircleAvatar(
-                          backgroundColor: AppColors.mainOrange,
-                        ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  Text(
-                    '${allUsers[index].name}',
-                    style: AppTextStyles.font18DarkGrayRegular,
-                  ),
-                ],
+          itemBuilder: (context, index) {
+            var formattedTime = allUsers[index].timestamp != null
+                ? DateFormat('h:mm a').format(
+                    allUsers[index].timestamp!.add(const Duration(hours: 1)))
+                : '';
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: InkWell(
+                onTap: () {
+                  context.pushNamed(Routes.chatScreen,
+                      arguments: allUsers[index].uId);
+                },
+                child: Row(
+                  children: [
+                    allUsers[index].image != null &&
+                            allUsers[index].image!.isNotEmpty
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage('${allUsers[index].image}'),
+                          )
+                        : const CircleAvatar(
+                            backgroundColor: AppColors.mainOrange,
+                          ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${allUsers[index].name}',
+                            style: AppTextStyles.font18DarkGrayRegular,
+                          ),
+                          allUsers[index].isTyping == true
+                              ? Text(
+                                  'Typing',
+                                  style: AppTextStyles.font12MainOrangeBold,
+                                )
+                              : allUsers[index].senderId == allUsers[index].uId
+                                  ? Text(
+                                      allUsers[index].lastMessage ?? '',
+                                      style: AppTextStyles.font12DarkGrayBold,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      'Me: ${allUsers[index].lastMessage ?? ''}',
+                                      style: AppTextStyles.font12DarkGrayBold,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30.h, right: 3.w),
+                      child: Text(
+                        formattedTime,
+                        style: AppTextStyles.font12MainOrangeBold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
           separatorBuilder: (context, index) => myDivider(),
           itemCount: allUsers.length,
         );
