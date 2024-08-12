@@ -39,46 +39,68 @@ class ChatCubit extends Cubit<ChatStates> {
   }
 
   var uId = CacheHelper.getData(key: 'uId');
-  void sendMessage({required String receiverId}) {
+  void sendMessage({required String receiverId}) async {
     if (uId == null || receiverId.isEmpty) return;
 
     MessageModel messageModel = MessageModel(
-      senderId: uId,
+      senderId: uId!,
       receiverId: receiverId,
       dataTime: FieldValue.serverTimestamp(),
       text: messageController.text,
     );
-    // set my chats
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
+
+    try {
+      // Send message to my chats
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(receiverId)
+          .collection('messages')
+          .add(messageModel.toMap());
+
+      // Update last message in my chat list
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(receiverId)
+          .set({
+        'lastMessage': messageController.text,
+        'timestamp': FieldValue.serverTimestamp(),
+        'isTyping': false,
+        'senderId': uId
+      });
+
+      // Send message to receiver's chats
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(uId)
+          .collection('messages')
+          .add(messageModel.toMap());
+
+      // Update last message in receiver's chat list
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(uId)
+          .set({
+        'lastMessage': messageController.text,
+        'timestamp': FieldValue.serverTimestamp(),
+        'isTyping': false,
+        'senderId': uId
+      });
+
       messageController.clear();
       emit(SendMessageSuccessState());
       _scrollToBottom();
-    }).catchError((error) {
+    } catch (error) {
       print(error.toString());
       emit(SendMessageErrorState());
-    });
-    // set receiver chats
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(uId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
-      emit(SendMessageSuccessState());
-      _scrollToBottom();
-    }).catchError((error) {
-      print(error.toString());
-      emit(SendMessageErrorState());
-    });
+    }
   }
 
   List<MessageModel> messages = [];
@@ -113,12 +135,26 @@ class ChatCubit extends Cubit<ChatStates> {
       {required String receiverId, required bool isTyping}) {
     if (uId == null || receiverId.isEmpty) return;
 
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(uId)
+    //     .collection('chats')
+    //     .doc(receiverId)
+    //     .update(
+    //   {
+    //     'isTyping': isTyping,
+    //   },
+    // );
     FirebaseFirestore.instance
         .collection('users')
-        .doc(uId)
-        .collection('chats')
         .doc(receiverId)
-        .set({'isTyping': isTyping, 'senderId': uId}, SetOptions(merge: true));
+        .collection('chats')
+        .doc(uId)
+        .update(
+      {
+        'isTyping': isTyping,
+      },
+    );
     emit(UpdateTypingStatusState());
     isTypingRealy = isTyping;
     print(isTyping);

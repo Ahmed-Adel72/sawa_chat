@@ -25,6 +25,7 @@ class AppTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      cursorColor: AppColors.mainOrange,
       controller: controller,
       decoration: InputDecoration(
         fillColor: AppColors.moreLightGray,

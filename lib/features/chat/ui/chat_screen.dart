@@ -29,9 +29,9 @@ class ChatScreen extends StatelessWidget {
               title: StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
-                    .doc(userDate?.uId)
-                    .collection('chats')
                     .doc(uId)
+                    .collection('chats')
+                    .doc(userDate?.uId)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data != null) {
@@ -42,6 +42,7 @@ class ChatScreen extends StatelessWidget {
                     print(isTyping);
 
                     return RowOfImageAndName(
+                      uid: userDate?.uId,
                       isTyping: isTyping,
                       senderMessageUid: senderMessageUid,
                     );
@@ -51,23 +52,37 @@ class ChatScreen extends StatelessWidget {
                 },
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  state is GetMessagesLoadingState
-                      ? const Expanded(
-                          child: Center(
-                              child: CircularProgressIndicator(
-                          color: AppColors.mainOrange,
-                        )))
-                      : const ListOfMessages(),
-                  SizedBox(
-                    height: 5.h,
+            body: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                      image:
+                          AssetImage("assets/images/chat_background.png.png"),
+                      fit: BoxFit.fill,
+                    )),
                   ),
-                  const TextFormAndSendButton(),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    children: [
+                      state is GetMessagesLoadingState
+                          ? const Expanded(
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                              color: AppColors.mainOrange,
+                            )))
+                          : const ListOfMessages(),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      const TextFormAndSendButton(),
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         },

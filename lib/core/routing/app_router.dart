@@ -7,6 +7,8 @@ import 'package:sawa_chat/features/layout/logic/cubit/layout_cubit.dart';
 import 'package:sawa_chat/features/layout/ui/layout_screen.dart';
 import 'package:sawa_chat/features/login/logic/cubit/login_cubit.dart';
 import 'package:sawa_chat/features/login/ui/login_screen.dart';
+import 'package:sawa_chat/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:sawa_chat/features/profile/ui/edit_profile_screen.dart';
 import 'package:sawa_chat/features/profile/ui/profile_screen.dart';
 import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_cubit.dart';
 import 'package:sawa_chat/features/sign_up/ui/sign_up_screen.dart';
@@ -18,16 +20,27 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
                   create: (context) => LayoutCubit()
-                    ..getAllUsers()
-                    ..getMyData(),
+                    ..getMyData()
+                    ..getMyUsersChats(),
                   child: const LayoutScreen(),
                 ));
       case Routes.profileScreen:
+        final uid = settings.arguments as String;
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LayoutCubit()..getMyData(),
-                  child: const ProfileScreen(),
+                  create: (context) => ProfileCubit(),
+                  child: ProfileScreen(
+                    uid: uid,
+                  ),
                 ));
+      case Routes.editProfileScreen:
+        final uid = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => ProfileCubit(),
+                child: EditProfileScreen(
+                  uid: uid,
+                )));
       case Routes.chatScreen:
         final uid = settings.arguments as String;
         return MaterialPageRoute(
