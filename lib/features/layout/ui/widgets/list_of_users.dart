@@ -18,79 +18,87 @@ class ListOfUsers extends StatelessWidget {
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var allUsers = LayoutCubit.get(context).allUser;
-        return ListView.separated(
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            var formattedTime = allUsers[index].timestamp != null
-                ? DateFormat('h:mm a').format(
-                    allUsers[index].timestamp!.add(const Duration(hours: 1)))
-                : '';
-            return Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: InkWell(
-                onTap: () {
-                  context.pushNamed(Routes.chatScreen,
-                      arguments: allUsers[index].uId);
-                },
-                child: Row(
-                  children: [
-                    allUsers[index].image != null &&
-                            allUsers[index].image!.isNotEmpty
-                        ? CircleAvatar(
-                            backgroundImage:
-                                NetworkImage('${allUsers[index].image}'),
-                          )
-                        : const CircleAvatar(
-                            backgroundColor: AppColors.mainOrange,
-                          ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        var myFriendsChats = LayoutCubit.get(context).myFriendsChats;
+        return state is GetAllUsersSuccessState && myFriendsChats.isEmpty
+            ? const Center(child: Text('search your friend'))
+            : ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  var formattedTime = myFriendsChats[index].timestamp != null
+                      ? DateFormat('h:mm a').format(myFriendsChats[index]
+                          .timestamp!
+                          .add(const Duration(hours: 1)))
+                      : '';
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: InkWell(
+                      onTap: () {
+                        context.pushNamed(Routes.chatScreen,
+                            arguments: myFriendsChats[index].uId);
+                      },
+                      child: Row(
                         children: [
-                          Text(
-                            '${allUsers[index].name}',
-                            style: AppTextStyles.font18DarkGrayRegular,
-                          ),
-                          allUsers[index].isTyping == true
-                              ? Text(
-                                  'Typing',
-                                  style: AppTextStyles.font12MainOrangeBold,
+                          myFriendsChats[index].image != null &&
+                                  myFriendsChats[index].image!.isNotEmpty
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      '${myFriendsChats[index].image}'),
                                 )
-                              : allUsers[index].senderId == allUsers[index].uId
-                                  ? Text(
-                                      allUsers[index].lastMessage ?? '',
-                                      style: AppTextStyles.font12DarkGrayBold,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  : Text(
-                                      'Me: ${allUsers[index].lastMessage ?? ''}',
-                                      style: AppTextStyles.font12DarkGrayBold,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                              : const CircleAvatar(
+                                  backgroundColor: AppColors.mainOrange,
+                                ),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${myFriendsChats[index].name}',
+                                  style: AppTextStyles.font18DarkGrayRegular,
+                                ),
+                                myFriendsChats[index].isTyping == true
+                                    ? Text(
+                                        'Typing',
+                                        style:
+                                            AppTextStyles.font12MainOrangeBold,
+                                      )
+                                    : myFriendsChats[index].senderId ==
+                                            myFriendsChats[index].uId
+                                        ? Text(
+                                            myFriendsChats[index].lastMessage ??
+                                                '',
+                                            style: AppTextStyles
+                                                .font12DarkGrayBold,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        : Text(
+                                            'Me: ${myFriendsChats[index].lastMessage ?? ''}',
+                                            style: AppTextStyles
+                                                .font12DarkGrayBold,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 30.h, right: 3.w),
+                            child: Text(
+                              formattedTime,
+                              style: AppTextStyles.font12MainOrangeBold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.h, right: 3.w),
-                      child: Text(
-                        formattedTime,
-                        style: AppTextStyles.font12MainOrangeBold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (context, index) => myDivider(),
-          itemCount: allUsers.length,
-        );
+                  );
+                },
+                separatorBuilder: (context, index) => myDivider(),
+                itemCount: myFriendsChats.length,
+              );
       },
     );
   }

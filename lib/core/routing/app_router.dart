@@ -10,8 +10,11 @@ import 'package:sawa_chat/features/login/ui/login_screen.dart';
 import 'package:sawa_chat/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:sawa_chat/features/profile/ui/edit_profile_screen.dart';
 import 'package:sawa_chat/features/profile/ui/profile_screen.dart';
+import 'package:sawa_chat/features/search/logic/cubit/search_cubit.dart';
 import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_cubit.dart';
 import 'package:sawa_chat/features/sign_up/ui/sign_up_screen.dart';
+
+import '../../features/search/ui/search_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -61,6 +64,12 @@ class AppRouter {
             builder: (_) => BlocProvider(
                   create: (context) => SignUpCubit(),
                   child: const SignUpScreen(),
+                ));
+      case Routes.searchScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => SearchCubit(),
+                  child: const SearchScreen(),
                 ));
       default:
         return null;

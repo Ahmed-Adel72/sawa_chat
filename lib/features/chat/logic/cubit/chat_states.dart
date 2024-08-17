@@ -20,3 +20,5 @@ class GetMessagesLoadingState extends ChatStates {}
 class GetMessagesErrorState extends ChatStates {}
 
 class UpdateTypingStatusState extends ChatStates {}
+
+class CheckUserTypingStatusState extends ChatStates {}

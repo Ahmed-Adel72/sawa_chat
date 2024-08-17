@@ -19,13 +19,11 @@ class LayoutScreen extends StatelessWidget {
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = LayoutCubit.get(context);
         var myData = LayoutCubit.get(context).myData;
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              CacheHelper.deleteData('uId');
-              context.pushReplacementNamed(Routes.loginScreen);
+              context.pushNamed(Routes.searchScreen);
             },
             backgroundColor: AppColors.mainOrange,
             clipBehavior: Clip.hardEdge,

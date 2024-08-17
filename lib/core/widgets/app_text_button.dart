@@ -24,7 +24,7 @@ class AppTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height ?? 60.h,
+      height: height ?? 45.h,
       width: width ?? double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 25),
