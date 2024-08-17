@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sawa_chat/core/constants/app_constants.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_states.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
@@ -27,19 +30,23 @@ class LayoutCubit extends Cubit<LayoutStates> {
       isLaodMyData = false;
     }).catchError((error) {
       emit(GetMyDataErrorState());
+      print(error.toString());
       isLaodMyData = false;
     });
   }
 
-  List<UserModel> allUser = [];
+  List<UserModel> myFriendsChats = [];
+  List<UserModel> allUsers = [];
 
   Future<void> getAllUsers() async {
     emit(GetAllUsersLoadingState());
 
     try {
       var userDocs = await FirebaseFirestore.instance.collection('users').get();
-
-      allUser = userDocs.docs
+      allUsers = userDocs.docs.map((doc) {
+        return UserModel.fromJson(doc.data());
+      }).toList();
+      myFriendsChats = userDocs.docs
           .map((doc) {
             var user = UserModel.fromJson(doc.data());
 
@@ -51,9 +58,9 @@ class LayoutCubit extends Cubit<LayoutStates> {
             // Listen to real-time updates for each user's last message
             FirebaseFirestore.instance
                 .collection('users')
-                .doc(uId)
-                .collection('chats')
                 .doc(user.uId)
+                .collection('chats')
+                .doc(uId)
                 .snapshots()
                 .listen((chatDoc) {
               if (chatDoc.exists) {
@@ -71,56 +78,34 @@ class LayoutCubit extends Cubit<LayoutStates> {
           })
           .whereType<UserModel>() // Filter out any nulls
           .toList();
-
+      searchOfUser = allUsers;
       emit(GetAllUsersSuccessState());
     } catch (error) {
       emit(GetAllUsersErrorState());
     }
-
-    print(allUser);
   }
+
+  StreamSubscription<QuerySnapshot>? _chatSubscription;
 
   List<String> myUsersChat = [];
   Future<void> getMyUsersChats() async {
-    await FirebaseFirestore.instance
+    _chatSubscription?.cancel();
+
+    _chatSubscription = FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('chats')
-        .get()
-        .then((value) {
-      myUsersChat = value.docs.map((doc) => doc.id).toList();
-      print('Chat UIDs: $myUsersChat');
-      getAllUsers();
+        .snapshots()
+        .listen((snapshot) {
+      myUsersChat = snapshot.docs.map((doc) => doc.id).toList();
+      getAllUsers(); // Fetch the updated user list
       emit(GetMyUsersChatSuccessState());
-    }).catchError((error) {
-      emit(GetMyUsersChatErrorState());
-      print(error.toString());
     });
   }
 
-  String lastMessage = '';
-  String lastMessageTime = '';
-
-  void listenToLastMessage({required String receiverId}) {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('chats')
-        .doc(receiverId)
-        .snapshots()
-        .listen((docSnapshot) {
-      if (docSnapshot.exists) {
-        lastMessage = docSnapshot.data()?['lastMessage'] ?? 'No messages yet';
-        lastMessageTime = (docSnapshot.data()?['timestamp'] as Timestamp?)
-                ?.toDate()
-                .toString() ??
-            '';
-        emit(UpdateLastMessageState()); // Emit a state to update the UI
-      } else {
-        lastMessage = 'No messages yet';
-        lastMessageTime = '';
-        emit(UpdateLastMessageState()); // Emit a state to update the UI
-      }
-    });
+  @override
+  Future<void> close() {
+    _chatSubscription?.cancel();
+    return super.close();
   }
 }

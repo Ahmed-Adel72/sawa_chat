@@ -17,5 +17,3 @@ class GetAllUsersErrorState extends LayoutStates {}
 class GetMyUsersChatSuccessState extends LayoutStates {}
 
 class GetMyUsersChatErrorState extends LayoutStates {}
-
-class UpdateLastMessageState extends LayoutStates {}

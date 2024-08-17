@@ -95,6 +95,7 @@ class ChatCubit extends Cubit<ChatStates> {
       });
 
       messageController.clear();
+      checkingTyping = false;
       emit(SendMessageSuccessState());
       _scrollToBottom();
     } catch (error) {
@@ -130,34 +131,73 @@ class ChatCubit extends Cubit<ChatStates> {
     });
   }
 
-  bool isTypingRealy = false;
+  // void updateTypingStatus(
+  //     {required String receiverId, required bool isTyping}) {
+  //   if (uId == null || receiverId.isEmpty) return;
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uId)
+  //       .collection('chats')
+  //       .doc(receiverId)
+  //       .update(
+  //     {
+  //       'isTyping': isTyping,
+  //     },
+  //   );
+  //   emit(UpdateTypingStatusState());
+  //   isTypingRealy = isTyping;
+  //   print(isTyping);
+  // }
+
+  bool checkingTyping = false;
+  void checkTyping(bool text) {
+    checkingTyping = text;
+    emit(CheckUserTypingStatusState());
+  }
+
   void updateTypingStatus(
-      {required String receiverId, required bool isTyping}) {
+      {required String receiverId, required bool isTyping}) async {
     if (uId == null || receiverId.isEmpty) return;
 
-    // FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(uId)
-    //     .collection('chats')
-    //     .doc(receiverId)
-    //     .update(
-    //   {
-    //     'isTyping': isTyping,
-    //   },
-    // );
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(uId)
-        .update(
-      {
-        'isTyping': isTyping,
-      },
-    );
-    emit(UpdateTypingStatusState());
-    isTypingRealy = isTyping;
-    print(isTyping);
+    try {
+      // Check if the chat document exists
+      var chatDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(receiverId)
+          .get();
+
+      // If the chat document doesn't exist, no messages have been sent
+      if (!chatDoc.exists) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uId)
+            .collection('chats')
+            .doc(receiverId)
+            .set(
+          {
+            'isTyping': isTyping,
+          },
+        );
+      } else {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uId)
+            .collection('chats')
+            .doc(receiverId)
+            .update(
+          {
+            'isTyping': isTyping,
+          },
+        );
+        emit(UpdateTypingStatusState());
+        print(isTyping);
+      }
+    } catch (error) {
+      print("Error checking first message: $error");
+      return;
+    }
   }
 
   void _scrollToBottom() {

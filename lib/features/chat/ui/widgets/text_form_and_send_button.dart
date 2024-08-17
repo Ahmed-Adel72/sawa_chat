@@ -35,6 +35,7 @@ class TextFormAndSendButton extends StatelessWidget {
                     child: TextFormField(
                       cursorColor: AppColors.mainOrange,
                       onChanged: (text) {
+                        cubit.checkTyping(text.isNotEmpty);
                         cubit.updateTypingStatus(
                           receiverId: '${userDate?.uId}',
                           isTyping: text.isNotEmpty,
@@ -47,7 +48,7 @@ class TextFormAndSendButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                  cubit.isTypingRealy
+                  cubit.checkingTyping
                       ? Container(
                           color: AppColors.mainOrange,
                           child: MaterialButton(

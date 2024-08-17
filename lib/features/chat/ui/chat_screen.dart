@@ -29,9 +29,9 @@ class ChatScreen extends StatelessWidget {
               title: StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
-                    .doc(uId)
-                    .collection('chats')
                     .doc(userDate?.uId)
+                    .collection('chats')
+                    .doc(uId)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data != null) {

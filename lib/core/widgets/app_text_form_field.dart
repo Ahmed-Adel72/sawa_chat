@@ -10,6 +10,7 @@ class AppTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final Icon? prefixIcon;
   final Function(String?) validator;
+  final Function(String?)? onChanged;
   const AppTextFormField({
     super.key,
     this.controller,
@@ -20,6 +21,7 @@ class AppTextFormField extends StatelessWidget {
     this.enableBorder,
     this.suffixIcon,
     this.prefixIcon,
+    this.onChanged,
   });
 
   @override
@@ -69,6 +71,7 @@ class AppTextFormField extends StatelessWidget {
       validator: (value) {
         return validator(value);
       },
+      onChanged: onChanged,
     );
   }
 }
