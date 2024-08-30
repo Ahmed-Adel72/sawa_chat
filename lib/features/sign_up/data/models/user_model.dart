@@ -7,6 +7,7 @@ class UserModel {
   String? lastMessage;
   String? senderId;
   bool? isTyping;
+  String? pushToken;
 
   DateTime? timestamp;
 
@@ -20,6 +21,7 @@ class UserModel {
     this.senderId,
     this.timestamp,
     this.isTyping,
+    this.pushToken,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -30,8 +32,8 @@ class UserModel {
     lastMessage = json['lastMessage'];
     senderId = json['senderId'];
     isTyping = json['isTyping'];
-
     timestamp = json['timestamp']?.toDate();
+    pushToken = json['pushToken'];
   }
 
   Map<String, dynamic> toMap() {
@@ -45,6 +47,7 @@ class UserModel {
       'timestamp': timestamp,
       'senderId': senderId,
       'isTyping': isTyping,
+      'pushToken': pushToken,
     };
   }
 }

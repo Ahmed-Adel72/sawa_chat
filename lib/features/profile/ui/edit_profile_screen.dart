@@ -120,7 +120,7 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                             Align(
                               child: AppTextFormField(
-                                controller: cubit.emailController,
+                                controller: cubit.nameController,
                                 hintText: 'Your name',
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {

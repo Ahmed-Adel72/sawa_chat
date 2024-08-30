@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/features/chat/data/models/message_model.dart';
 import 'package:sawa_chat/features/chat/logic/cubit/chat_states.dart';
+import 'package:sawa_chat/features/layout/logic/cubit/layout_cubit.dart';
+import 'package:sawa_chat/features/notification/notification.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 
 class ChatCubit extends Cubit<ChatStates> {
@@ -39,6 +41,8 @@ class ChatCubit extends Cubit<ChatStates> {
   }
 
   var uId = CacheHelper.getData(key: 'uId');
+  var myName = CacheHelper.getData(key: 'myName');
+
   void sendMessage({required String receiverId}) async {
     if (uId == null || receiverId.isEmpty) return;
 
@@ -93,7 +97,10 @@ class ChatCubit extends Cubit<ChatStates> {
         'isTyping': false,
         'senderId': uId
       });
-
+      FirebaseAuthService.sendNotification(
+          name: "$myName",
+          lastMessage: messageController.text,
+          userPushToken: "${userData!.pushToken}");
       messageController.clear();
       checkingTyping = false;
       emit(SendMessageSuccessState());
