@@ -67,6 +67,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
       lastMessage: '',
       timestamp: DateTime.now(),
       senderId: '',
+      pushToken: '',
     );
     await FirebaseFirestore.instance
         .collection('users')

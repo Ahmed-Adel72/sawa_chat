@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sawa_chat/core/constants/app_constants.dart';
-import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/core/helpers/extensions.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/core/theming/app_colors.dart';

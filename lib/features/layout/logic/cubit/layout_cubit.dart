@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/constants/app_constants.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_states.dart';
+import 'package:sawa_chat/features/notification/notification.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 
 class LayoutCubit extends Cubit<LayoutStates> {
@@ -12,13 +12,11 @@ class LayoutCubit extends Cubit<LayoutStates> {
   static LayoutCubit get(context) => BlocProvider.of(context);
 
   var uId = CacheHelper.getData(key: 'uId');
-
   UserModel? myData;
-  bool isLoadMyData = false;
+
   Future<void> getMyData() async {
     emit(GetMyDataLoadingState());
-    bool isLaodMyData = true;
-
+    await FirebaseAuthService.getAccessToken();
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
@@ -26,12 +24,13 @@ class LayoutCubit extends Cubit<LayoutStates> {
         .then((value) {
       print(value.data());
       myData = UserModel.fromJson(value.data()!);
+      CacheHelper.setData(key: 'myName', value: value.data()!['name']);
+
+      FirebaseAuthService.getFirebaseMessagingToken();
       emit(GetMyDataSuccessState());
-      isLaodMyData = false;
     }).catchError((error) {
       emit(GetMyDataErrorState());
       print(error.toString());
-      isLaodMyData = false;
     });
   }
 
@@ -108,4 +107,6 @@ class LayoutCubit extends Cubit<LayoutStates> {
     _chatSubscription?.cancel();
     return super.close();
   }
+
+  ///////////////////////////
 }
