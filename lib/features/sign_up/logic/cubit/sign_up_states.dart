@@ -9,7 +9,3 @@ class UserSignUpLoadingState extends SignUpStates {}
 class UserSignUpSuccessState extends SignUpStates {}
 
 class UserSignUpErrorState extends SignUpStates {}
-
-class UserCreateSuccessState extends SignUpStates {}
-
-class UserCreateErrorState extends SignUpStates {}
