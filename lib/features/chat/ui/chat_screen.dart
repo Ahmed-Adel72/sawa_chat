@@ -78,7 +78,7 @@ class ChatScreen extends StatelessWidget {
                       SizedBox(
                         height: 5.h,
                       ),
-                      const TextFormAndSendButton(),
+                      TextFormAndSendButton(),
                     ],
                   ),
                 ),

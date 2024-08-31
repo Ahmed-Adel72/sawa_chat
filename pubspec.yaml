@@ -51,6 +51,8 @@ dependencies:
   flutter_native_splash: ^2.4.1
   firebase_messaging: ^15.0.4
   googleapis_auth: ^1.6.0
+  google_fonts: ^6.2.1
+  skeletonizer: ^1.4.2
 
 dev_dependencies:
   flutter_test:

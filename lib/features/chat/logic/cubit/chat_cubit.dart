@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/features/chat/data/models/message_model.dart';
 import 'package:sawa_chat/features/chat/logic/cubit/chat_states.dart';
-import 'package:sawa_chat/features/layout/logic/cubit/layout_cubit.dart';
 import 'package:sawa_chat/features/notification/notification.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 
@@ -13,8 +12,8 @@ class ChatCubit extends Cubit<ChatStates> {
   ChatCubit() : super(InitialChatStates());
 
   static ChatCubit get(context) => BlocProvider.of(context);
-
   TextEditingController messageController = TextEditingController();
+
   final ScrollController scrollController = ScrollController();
 
   UserModel? userData;
@@ -23,7 +22,7 @@ class ChatCubit extends Cubit<ChatStates> {
   bool isLoadUserData = false;
   Future<void> getUserData({required String uid}) async {
     emit(GetUserDataLoadingState());
-    bool isLoadUserData = true;
+    isLoadUserData = true;
 
     await FirebaseFirestore.instance
         .collection('users')
@@ -43,14 +42,15 @@ class ChatCubit extends Cubit<ChatStates> {
   var uId = CacheHelper.getData(key: 'uId');
   var myName = CacheHelper.getData(key: 'myName');
 
-  void sendMessage({required String receiverId}) async {
+  void sendMessage(
+      {required String receiverId, required String message}) async {
     if (uId == null || receiverId.isEmpty) return;
 
     MessageModel messageModel = MessageModel(
       senderId: uId!,
       receiverId: receiverId,
       dataTime: FieldValue.serverTimestamp(),
-      text: messageController.text,
+      text: message,
     );
 
     try {
@@ -70,7 +70,7 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection('chats')
           .doc(receiverId)
           .set({
-        'lastMessage': messageController.text,
+        'lastMessage': message,
         'timestamp': FieldValue.serverTimestamp(),
         'isTyping': false,
         'senderId': uId
@@ -92,17 +92,15 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection('chats')
           .doc(uId)
           .set({
-        'lastMessage': messageController.text,
+        'lastMessage': message,
         'timestamp': FieldValue.serverTimestamp(),
         'isTyping': false,
         'senderId': uId
       });
       FirebaseAuthService.sendNotification(
           name: "$myName",
-          lastMessage: messageController.text,
+          lastMessage: message,
           userPushToken: "${userData!.pushToken}");
-      messageController.clear();
-      checkingTyping = false;
       emit(SendMessageSuccessState());
       _scrollToBottom();
     } catch (error) {
@@ -137,24 +135,6 @@ class ChatCubit extends Cubit<ChatStates> {
       _scrollToBottom();
     });
   }
-
-  // void updateTypingStatus(
-  //     {required String receiverId, required bool isTyping}) {
-  //   if (uId == null || receiverId.isEmpty) return;
-  //   FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(uId)
-  //       .collection('chats')
-  //       .doc(receiverId)
-  //       .update(
-  //     {
-  //       'isTyping': isTyping,
-  //     },
-  //   );
-  //   emit(UpdateTypingStatusState());
-  //   isTypingRealy = isTyping;
-  //   print(isTyping);
-  // }
 
   bool checkingTyping = false;
   void checkTyping(bool text) {
