@@ -14,7 +14,6 @@ import 'package:sawa_chat/features/profile/ui/profile_screen.dart';
 import 'package:sawa_chat/features/search/logic/cubit/search_cubit.dart';
 import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_cubit.dart';
 import 'package:sawa_chat/features/sign_up/ui/sign_up_screen.dart';
-
 import '../../features/search/ui/search_screen.dart';
 
 class AppRouter {
@@ -57,7 +56,7 @@ class AppRouter {
       case Routes.loginScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LoginCubit(),
+                  create: (context) => getIt<LoginCubit>(),
                   child: LoginScreen(),
                 ));
       case Routes.signUpScreen:
