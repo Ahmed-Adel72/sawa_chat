@@ -35,9 +35,9 @@ class LayoutScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: AppColors.moreLightGray,
             title: Text(
-              'Sawa Chat',
+              'Sawa chat',
               style: AppTextStyles.font30DarkGrayBold.copyWith(
-                fontSize: 23,
+                fontSize: 22.sp,
                 color: Colors.black54,
               ),
             ),

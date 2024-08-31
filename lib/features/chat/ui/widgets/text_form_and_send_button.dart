@@ -56,11 +56,14 @@ class TextFormAndSendButton extends StatelessWidget {
                             onPressed: () {
                               cubit.sendMessage(
                                 receiverId: '${userDate?.uId}',
+                                message: cubit.messageController.text,
                               );
                               cubit.updateTypingStatus(
                                 receiverId: '${userDate?.uId}',
                                 isTyping: false,
                               );
+                              cubit.messageController.clear();
+                              cubit.checkingTyping = false;
                             },
                             child: Icon(
                               Icons.send_rounded,

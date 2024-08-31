@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sawa_chat/core/di/dependency_injection.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
 import 'package:sawa_chat/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:sawa_chat/features/chat/ui/chat_screen.dart';
@@ -62,7 +63,7 @@ class AppRouter {
       case Routes.signUpScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => SignUpCubit(),
+                  create: (context) => getIt<SignUpCubit>(),
                   child: const SignUpScreen(),
                 ));
       case Routes.searchScreen:

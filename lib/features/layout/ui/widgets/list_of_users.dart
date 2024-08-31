@@ -19,7 +19,7 @@ class ListOfUsers extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var myFriendsChats = LayoutCubit.get(context).myFriendsChats;
-        return state is GetAllUsersSuccessState && myFriendsChats.isEmpty
+        return state is GetMyDataSuccessState && myFriendsChats.isEmpty
             ? const Center(child: Text('search your friend'))
             : ListView.separated(
                 physics: const BouncingScrollPhysics(),

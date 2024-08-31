@@ -16,6 +16,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
 
   Future<void> getMyData() async {
     emit(GetMyDataLoadingState());
+
     await FirebaseAuthService.getAccessToken();
     await FirebaseFirestore.instance
         .collection('users')
@@ -37,8 +38,10 @@ class LayoutCubit extends Cubit<LayoutStates> {
   List<UserModel> myFriendsChats = [];
   List<UserModel> allUsers = [];
 
+  bool isLoading = false;
   Future<void> getAllUsers() async {
     emit(GetAllUsersLoadingState());
+    isLoading = true;
 
     try {
       var userDocs = await FirebaseFirestore.instance.collection('users').get();
@@ -69,7 +72,10 @@ class LayoutCubit extends Cubit<LayoutStates> {
                     chatDoc.data()?['lastMessage'] ?? 'No messages yet';
                 user.timestamp =
                     chatDoc.data()?['timestamp']?.toDate() ?? DateTime.now();
-                emit(GetAllUsersSuccessState()); // Emit state to refresh UI
+                isLoading = false;
+
+                emit(GetAllUsersSuccessState());
+                // Emit state to refresh UI
               }
             });
 
@@ -78,8 +84,11 @@ class LayoutCubit extends Cubit<LayoutStates> {
           .whereType<UserModel>() // Filter out any nulls
           .toList();
       searchOfUser = allUsers;
+      isLoading = false;
+
       emit(GetAllUsersSuccessState());
     } catch (error) {
+      isLoading = false;
       emit(GetAllUsersErrorState());
     }
   }

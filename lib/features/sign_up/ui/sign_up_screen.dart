@@ -9,7 +9,6 @@ import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_states.dart';
 import 'package:sawa_chat/features/sign_up/ui/widgets/already_have_account.dart';
 import 'package:sawa_chat/features/sign_up/ui/widgets/sign_up_form.dart';
 
-// ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
@@ -35,7 +34,7 @@ class SignUpScreen extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        SignUpForm(),
+                        const SignUpForm(),
                         cubit.isLoadingSignUp
                             ? const Center(
                                 child: CircularProgressIndicator(

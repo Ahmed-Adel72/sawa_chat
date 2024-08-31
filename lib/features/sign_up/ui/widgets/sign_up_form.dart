@@ -5,7 +5,7 @@ import 'package:sawa_chat/features/sign_up/logic/cubit/sign_up_cubit.dart';
 
 // ignore: must_be_immutable
 class SignUpForm extends StatelessWidget {
-  SignUpForm({super.key});
+  const SignUpForm({super.key});
 
   @override
   Widget build(BuildContext context) {
