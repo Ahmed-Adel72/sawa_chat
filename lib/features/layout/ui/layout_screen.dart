@@ -54,14 +54,14 @@ class LayoutScreen extends StatelessWidget {
                           radius: 20,
                         )
                       : const CircleAvatar(
-                          backgroundColor: AppColors.mainOrange,
+                          backgroundColor: Color.fromARGB(255, 221, 221, 221),
                           radius: 20,
                         ),
                 ),
               ),
             ],
           ),
-          body: ListOfUsers(),
+          body: const ListOfUsers(),
         );
       },
     );

@@ -3,36 +3,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/constants/app_constants.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
+import 'package:sawa_chat/features/layout/data/repos/layout_repo.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_states.dart';
 import 'package:sawa_chat/features/notification/notification.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 
 class LayoutCubit extends Cubit<LayoutStates> {
-  LayoutCubit() : super(InitialLayoutState());
+  final LayoutRepo _layoutRepo;
+  LayoutCubit(this._layoutRepo) : super(InitialLayoutState());
   static LayoutCubit get(context) => BlocProvider.of(context);
 
   var uId = CacheHelper.getData(key: 'uId');
   UserModel? myData;
 
+  // get my data
   Future<void> getMyData() async {
     emit(GetMyDataLoadingState());
-
-    await FirebaseAuthService.getAccessToken();
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .get()
-        .then((value) {
-      print(value.data());
-      myData = UserModel.fromJson(value.data()!);
-      CacheHelper.setData(key: 'myName', value: value.data()!['name']);
-
-      FirebaseAuthService.getFirebaseMessagingToken();
-      emit(GetMyDataSuccessState());
-    }).catchError((error) {
+    try {
+      await FirebaseAuthService.getAccessToken();
+      myData = await _layoutRepo.getUserData(uId: uId);
+      if (myData != null) {
+        CacheHelper.setData(key: 'myName', value: myData!.name);
+        FirebaseAuthService.getFirebaseMessagingToken();
+        emit(GetMyDataSuccessState());
+      } else {
+        emit(GetMyDataErrorState());
+      }
+    } catch (error) {
       emit(GetMyDataErrorState());
       print(error.toString());
-    });
+    }
   }
 
   List<UserModel> myFriendsChats = [];
@@ -75,13 +75,11 @@ class LayoutCubit extends Cubit<LayoutStates> {
                 isLoading = false;
 
                 emit(GetAllUsersSuccessState());
-                // Emit state to refresh UI
               }
             });
-
             return user;
           })
-          .whereType<UserModel>() // Filter out any nulls
+          .whereType<UserModel>()
           .toList();
       searchOfUser = allUsers;
       isLoading = false;
@@ -116,6 +114,4 @@ class LayoutCubit extends Cubit<LayoutStates> {
     _chatSubscription?.cancel();
     return super.close();
   }
-
-  ///////////////////////////
 }

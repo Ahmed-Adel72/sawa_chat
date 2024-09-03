@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/features/chat/data/models/message_model.dart';
+import 'package:sawa_chat/features/chat/data/repos/chat_repo.dart';
 import 'package:sawa_chat/features/chat/logic/cubit/chat_states.dart';
 import 'package:sawa_chat/features/notification/notification.dart';
 import 'package:sawa_chat/features/sign_up/data/models/user_model.dart';
 
 class ChatCubit extends Cubit<ChatStates> {
-  ChatCubit() : super(InitialChatStates());
+  final ChatRepo _chatRepo;
+  ChatCubit(this._chatRepo) : super(InitialChatStates());
 
   static ChatCubit get(context) => BlocProvider.of(context);
   TextEditingController messageController = TextEditingController();
@@ -17,31 +19,30 @@ class ChatCubit extends Cubit<ChatStates> {
   final ScrollController scrollController = ScrollController();
 
   UserModel? userData;
-  StreamSubscription<QuerySnapshot>? _messageSubscription;
-
-  bool isLoadUserData = false;
-  Future<void> getUserData({required String uid}) async {
-    emit(GetUserDataLoadingState());
-    isLoadUserData = true;
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .get()
-        .then((value) {
-      userData = UserModel.fromJson(value.data()!);
-      emit(GetUserDataSuccessState());
-      getMessage(receiverId: uid);
-      isLoadUserData = false;
-    }).catchError((error) {
-      emit(GetUserDataErrorState());
-      isLoadUserData = false;
-    });
-  }
+  StreamSubscription<List<MessageModel>>? _messageSubscription;
 
   var uId = CacheHelper.getData(key: 'uId');
   var myName = CacheHelper.getData(key: 'myName');
 
+  // get user data
+  bool isLoadUserData = false;
+  Future<void> getUserData({required String uid}) async {
+    emit(GetUserDataLoadingState());
+    isLoadUserData = true;
+    try {
+      userData = await _chatRepo.getUserData(uid);
+      if (userData != null) {
+        emit(GetUserDataSuccessState());
+        getMessage(receiverId: uid);
+      }
+      isLoadUserData = false;
+    } catch (error) {
+      emit(GetUserDataErrorState());
+      isLoadUserData = false;
+    }
+  }
+
+  // send message
   void sendMessage(
       {required String receiverId, required String message}) async {
     if (uId == null || receiverId.isEmpty) return;
@@ -55,48 +56,11 @@ class ChatCubit extends Cubit<ChatStates> {
 
     try {
       // Send message to my chats
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uId)
-          .collection('chats')
-          .doc(receiverId)
-          .collection('messages')
-          .add(messageModel.toMap());
-
-      // Update last message in my chat list
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uId)
-          .collection('chats')
-          .doc(receiverId)
-          .set({
-        'lastMessage': message,
-        'timestamp': FieldValue.serverTimestamp(),
-        'isTyping': false,
-        'senderId': uId
-      });
-
-      // Send message to receiver's chats
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(receiverId)
-          .collection('chats')
-          .doc(uId)
-          .collection('messages')
-          .add(messageModel.toMap());
-
-      // Update last message in receiver's chat list
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(receiverId)
-          .collection('chats')
-          .doc(uId)
-          .set({
-        'lastMessage': message,
-        'timestamp': FieldValue.serverTimestamp(),
-        'isTyping': false,
-        'senderId': uId
-      });
+      await _chatRepo.sendMessage(
+          senderId: uId,
+          receiverId: receiverId,
+          messageModel: messageModel,
+          message: message);
       FirebaseAuthService.sendNotification(
           name: "$myName",
           lastMessage: message,
@@ -109,28 +73,19 @@ class ChatCubit extends Cubit<ChatStates> {
     }
   }
 
+  // get messages
   List<MessageModel> messages = [];
   void getMessage({required String receiverId}) {
     _messageSubscription?.cancel();
-
     if (uId == null || receiverId.isEmpty) {
       emit(GetMessagesErrorState());
       return;
     }
     emit(GetMessagesLoadingState());
-    _messageSubscription = FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .orderBy('dataTime')
-        .snapshots()
-        .listen((event) {
-      messages = [];
-      event.docs.forEach((element) {
-        messages.add(MessageModel.fromJson(element.data()));
-      });
+    _messageSubscription = _chatRepo
+        .getMessages(senderId: uId!, receiverId: receiverId)
+        .listen((messageList) {
+      messages = messageList;
       emit(GetMessagesSuccessState());
       _scrollToBottom();
     });
@@ -142,48 +97,19 @@ class ChatCubit extends Cubit<ChatStates> {
     emit(CheckUserTypingStatusState());
   }
 
+  // update typing status
   void updateTypingStatus(
       {required String receiverId, required bool isTyping}) async {
     if (uId == null || receiverId.isEmpty) return;
-
     try {
-      // Check if the chat document exists
-      var chatDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uId)
-          .collection('chats')
-          .doc(receiverId)
-          .get();
-
-      // If the chat document doesn't exist, no messages have been sent
-      if (!chatDoc.exists) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(uId)
-            .collection('chats')
-            .doc(receiverId)
-            .set(
-          {
-            'isTyping': isTyping,
-          },
-        );
-      } else {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(uId)
-            .collection('chats')
-            .doc(receiverId)
-            .update(
-          {
-            'isTyping': isTyping,
-          },
-        );
-        emit(UpdateTypingStatusState());
-        print(isTyping);
-      }
+      await _chatRepo.updateTypingStatus(
+        senderId: uId!,
+        receiverId: receiverId,
+        isTyping: isTyping,
+      );
+      emit(UpdateTypingStatusState());
     } catch (error) {
-      print("Error checking first message: $error");
-      return;
+      print(error.toString());
     }
   }
 

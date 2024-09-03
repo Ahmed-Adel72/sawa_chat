@@ -75,7 +75,7 @@ class ListOfUsers extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                           )
                                         : Text(
-                                            'Me: ${myFriendsChats[index].lastMessage ?? ''}',
+                                            'You: ${myFriendsChats[index].lastMessage ?? ''}',
                                             style: AppTextStyles
                                                 .font12DarkGrayBold,
                                             maxLines: 1,
