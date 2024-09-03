@@ -4,7 +4,7 @@ import 'package:sawa_chat/core/constants/app_constants.dart';
 import 'package:sawa_chat/core/helpers/cache_helper.dart';
 import 'package:sawa_chat/core/helpers/toast_helper.dart';
 import 'package:sawa_chat/core/routing/routes.dart';
-import 'package:sawa_chat/features/login/data/repo/login_repo.dart';
+import 'package:sawa_chat/features/login/data/repos/login_repo.dart';
 import 'package:sawa_chat/features/login/logic/cubit/login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
@@ -35,28 +35,6 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(UserLoginErrorState());
     }
   }
-
-  // Future<void> userLogin({required context}) async {
-  //   emit(UserLoginLoadingState());
-  //   isLoginLoading = true;
-  //   await FirebaseAuth.instance
-  //       .signInWithEmailAndPassword(
-  //     email: emailController.text,
-  //     password: passwordController.text,
-  //   )
-  //       .then((value) {
-  //     uId = value.user!.uid;
-  //     CacheHelper.setData(key: 'uId', value: uId);
-  //     ToastHelper.showSuccessToast(message: 'Login Successful');
-  //     emit(UserLoginSuccessState());
-  //     isLoginLoading = false;
-  //     Navigator.pushReplacementNamed(context, Routes.layoutScreen);
-  //   }).catchError((error) {
-  //     isLoginLoading = false;
-  //     ToastHelper.showErrorToast(message: "$error");
-  //     emit(UserLoginErrorState());
-  //   });
-  // }
 
   bool isPasswordObscure = true;
   IconData suffix = Icons.visibility_outlined;

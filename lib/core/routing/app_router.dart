@@ -22,7 +22,7 @@ class AppRouter {
       case Routes.layoutScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LayoutCubit()
+                  create: (context) => getIt<LayoutCubit>()
                     ..getMyData()
                     ..getMyUsersChats(),
                   child: const LayoutScreen(),
@@ -48,7 +48,7 @@ class AppRouter {
         final uid = settings.arguments as String;
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => ChatCubit(),
+                  create: (context) => getIt<ChatCubit>(),
                   child: ChatScreen(
                     uid: uid,
                   ),
