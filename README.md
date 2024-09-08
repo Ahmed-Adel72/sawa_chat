@@ -21,8 +21,7 @@ Skeletonizer: For displaying smooth loading skeletons while fetching data.
 Flutter ScreenUtil: For responsive layouts.
 
 # Screen Shots
-![Screenshot_20240908-231501](https://github.com/user-attachments/assets/4e2714bc-fa53-4fcb-820e-af633ada5181)
-![Screenshot_20240908-231515](https://github.com/user-attachments/assets/a0ea6a17-3539-431e-b222-2b6884a72c81)
+![Screenshot_20240908-231501](https://github.com/user-attachments/assets/4e2714bc-fa53-4fcb-820e-af633ada5181)  ![Screenshot_20240908-231515](https://github.com/user-attachments/assets/a0ea6a17-3539-431e-b222-2b6884a72c81)
 ![Screenshot_20240908-231520](https://github.com/user-attachments/assets/5c9588a6-efd2-4d1d-92f6-f337c9033246)
 ![Screenshot_20240908-231544](https://github.com/user-attachments/assets/a170c0ac-8591-492d-8ba3-992ed1841cfb)
 ![Screenshot_20240908-231720](https://github.com/user-attachments/assets/82e88cf3-2904-4822-a901-4ee7d3587b3b)
