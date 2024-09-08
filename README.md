@@ -45,18 +45,9 @@ Flutter ScreenUtil: For responsive layouts.
   <img src="https://github.com/user-attachments/assets/cd25d292-251d-40ec-bb32-17b5235a781f" width="300" />
   <img src="https://github.com/user-attachments/assets/8ab68e43-d338-45c1-b914-0d3adc5a0853" width="300" />
 </p>
-![Screenshot_20240908-231744](https://github.com/user-attachments/assets/3e2820c6-83eb-4842-b161-3df7157cc966)
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/3e2820c6-83eb-4842-b161-3df7157cc966" width="300" />
+</p>
 
 
-
-
-
-
-
-
-
-
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
