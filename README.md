@@ -5,9 +5,9 @@ Sawa Chat, a real-time chat application built using Flutter and Firebase.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
-![splash1](https://github.com/user-attachments/assets/154640b5-51a2-48ca-9aaf-5c0e01c82644)
 
-A few resources to get you started if this is your first Flutter project:
+A few resources to g![splash](https://github.com/user-attachments/assets/3a5e39a0-3d68-4ef1-9409-65f5bd65e623)
+et you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
