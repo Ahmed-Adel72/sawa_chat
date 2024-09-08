@@ -1,6 +1,6 @@
 # sawa_chat
 
-A new Flutter project.
+Sawa Chat, a real-time chat application built using Flutter and Firebase.
 
 ## Getting Started
 
