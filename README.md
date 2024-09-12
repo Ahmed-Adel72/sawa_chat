@@ -3,7 +3,7 @@
 Sawa Chat, a real-time chat application built using Flutter and Firebase.
 
 # 🌟 Key Features:
-Real-Time Messaging: Instant message delivery using Firebase Firestore and Firebase Messaging for smooth, efficient conversations.
+* Real-Time Messaging: Instant message delivery using Firebase Firestore and Firebase Messaging for smooth, efficient conversations.
 Typing Indicator: Stay in sync with who’s typing using real-time indicators.
 Push Notifications: Never miss a message with notifications, thanks to Flutter Local Notifications, ensuring messages are received even when the app is closed.
 Search Functionality: Quickly find users and start chatting right away.
