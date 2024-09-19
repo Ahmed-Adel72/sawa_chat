@@ -8,12 +8,15 @@ class SearchCubit extends Cubit<SearchStates> {
   SearchCubit() : super(InitialSearchState());
 
   static SearchCubit get(context) => BlocProvider.of(context);
+
   List<UserModel> user = [];
-  void searchUsers(BuildContext context, String value) {
+  bool isSearching = false;
+
+  void searchUsers(BuildContext context, String value, bool isSearch) {
     user = searchOfUser.where((user) {
       return user.name!.toLowerCase().contains(value.toLowerCase());
     }).toList();
-
+    isSearching = isSearch;
     emit(SearchUsersState());
   }
 }

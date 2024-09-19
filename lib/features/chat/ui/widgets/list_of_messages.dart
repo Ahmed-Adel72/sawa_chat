@@ -24,10 +24,8 @@ class ListOfMessages extends StatelessWidget {
           itemBuilder: (context, index) {
             var messages = cubit.messages[index];
             var formattedTime = messages.dataTime != null
-                ? DateFormat('h:mm a').format(messages.dataTime!
-                    .toDate()
-                    .toLocal()
-                    .add(const Duration(hours: 1)))
+                ? DateFormat('h:mm a')
+                    .format(messages.dataTime!.toDate().toLocal())
                 : '';
 
             if (uId == messages.senderId) {

@@ -46,8 +46,8 @@ class RowOfImageAndName extends StatelessWidget {
                   : isTyping!
                       ? Text(
                           ' Typing...',
-                          style: AppTextStyles.font18DarkGrayRegular
-                              .copyWith(color: AppColors.gray, fontSize: 13.sp),
+                          style: AppTextStyles.font18DarkGrayRegular.copyWith(
+                              color: AppColors.mainOrange, fontSize: 13.sp),
                         )
                       : const SizedBox(),
             ],

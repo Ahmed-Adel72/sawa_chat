@@ -80,12 +80,12 @@ class EditProfileScreen extends StatelessWidget {
                                         ? CircleAvatar(
                                             backgroundImage: NetworkImage(
                                                 '${userDate.image}'),
-                                            radius: 55,
+                                            radius: 60,
                                           )
                                         : CircleAvatar(
                                             backgroundImage:
                                                 FileImage(profileImage),
-                                            radius: 55,
+                                            radius: 60,
                                           )),
                                 IconButton(
                                   onPressed: () {
@@ -107,7 +107,7 @@ class EditProfileScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '  Your Name',
+                                '  Name',
                                 style: AppTextStyles.font18DarkGrayRegular
                                     .copyWith(
                                         fontSize: 15.sp,
@@ -135,7 +135,7 @@ class EditProfileScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '  Your Bio',
+                                '  Bio',
                                 style: AppTextStyles.font18DarkGrayRegular
                                     .copyWith(
                                         fontSize: 15.sp,
@@ -156,7 +156,7 @@ class EditProfileScreen extends StatelessWidget {
                               },
                             ),
                             SizedBox(
-                              height: 25.h,
+                              height: 35.h,
                             ),
                             profileImage != null
                                 ? state is ProfileImageUploadLoadingState
@@ -182,8 +182,7 @@ class EditProfileScreen extends StatelessWidget {
                                     : AppTextButton(
                                         buttonText: 'Update',
                                         textStyle: AppTextStyles
-                                            .font22MoreLightGrayBold
-                                            .copyWith(fontSize: 18.sp),
+                                            .font18MoreLightGrayBold,
                                         onPressed: () {
                                           if (cubit.formKey.currentState!
                                               .validate()) {

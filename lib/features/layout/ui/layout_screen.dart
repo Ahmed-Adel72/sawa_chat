@@ -9,6 +9,7 @@ import 'package:sawa_chat/core/theming/app_text_styles.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_cubit.dart';
 import 'package:sawa_chat/features/layout/logic/cubit/layout_states.dart';
 import 'package:sawa_chat/features/layout/ui/widgets/list_of_users.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LayoutScreen extends StatelessWidget {
   const LayoutScreen({super.key});
@@ -61,7 +62,9 @@ class LayoutScreen extends StatelessWidget {
               ),
             ],
           ),
-          body: const ListOfUsers(),
+          body: Skeletonizer(
+              enabled: LayoutCubit.get(context).isLoading,
+              child: ListOfUsers()),
         );
       },
     );

@@ -23,10 +23,11 @@ class LoginScreen extends StatelessWidget {
         var cubit = LoginCubit.get(context);
         return Container(
           decoration: const BoxDecoration(
+              color: Colors.white,
               image: DecorationImage(
-            image: AssetImage("assets/images/login.png"),
-            fit: BoxFit.fill,
-          )),
+                image: AssetImage("assets/images/login.png"),
+                fit: BoxFit.cover,
+              )),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Form(
@@ -49,7 +50,7 @@ class LoginScreen extends StatelessWidget {
                                   cubit.userLogin(context: context);
                                 }
                               },
-                              textStyle: AppTextStyles.font22MoreLightGrayBold,
+                              textStyle: AppTextStyles.font18MoreLightGrayBold,
                             ),
                       SizedBox(
                         height: 15.h,

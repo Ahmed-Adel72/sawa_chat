@@ -33,7 +33,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
         name: nameController.text,
         email: emailController.text,
         uId: value.user!.uid,
-        bio: 'Hey htere! i\'m using sawa chat',
+        bio: 'Hey there! i\'m using sawa chat',
         image:
             'https://as2.ftcdn.net/v2/jpg/05/89/93/27/500_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg',
         isTyping: false,

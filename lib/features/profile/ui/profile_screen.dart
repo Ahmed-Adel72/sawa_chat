@@ -9,6 +9,7 @@ import 'package:sawa_chat/core/theming/app_text_styles.dart';
 import 'package:sawa_chat/core/widgets/app_text_button.dart';
 import 'package:sawa_chat/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:sawa_chat/features/profile/logic/cubit/profile_states.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String? uid;
@@ -24,36 +25,37 @@ class ProfileScreen extends StatelessWidget {
         builder: (context, state) {
           var uId = CacheHelper.getData(key: 'uId');
           var userDate = ProfileCubit.get(context).userData;
+          var cubit = ProfileCubit.get(context);
           return Scaffold(
             appBar: AppBar(),
-            body: userDate == null
-                ? const Center(
-                    child: CircularProgressIndicator(
-                    color: AppColors.mainOrange,
-                  ))
-                : Padding(
-                    padding: const EdgeInsets.all(12.0),
+            body: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  Skeletonizer(
+                    enabled: cubit.isLoading,
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.topCenter,
-                          child: userDate.image != null &&
-                                  userDate.image!.isNotEmpty
+                          child: userDate?.image != null &&
+                                  userDate!.image!.isNotEmpty
                               ? CircleAvatar(
                                   backgroundImage:
                                       NetworkImage('${userDate.image}'),
-                                  radius: 55,
+                                  radius: 60,
                                 )
                               : const CircleAvatar(
-                                  backgroundColor: AppColors.mainOrange,
-                                  radius: 55,
+                                  backgroundColor:
+                                      Color.fromARGB(255, 221, 221, 221),
+                                  radius: 60,
                                 ),
                         ),
                         SizedBox(
                           height: 20.h,
                         ),
                         Text(
-                          '${userDate.name}',
+                          '${userDate?.name}',
                           style: AppTextStyles.font18DarkGrayRegular.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -62,94 +64,108 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: 5.h,
                         ),
-                        Text(
-                          '${userDate.bio}',
-                          style: AppTextStyles.font18GrayBold,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Text(
+                            '${userDate?.bio}',
+                            style: AppTextStyles.font18GrayBold,
+                          ),
                         ),
-                        SizedBox(
-                          height: 15.h,
-                        ),
-                        userDate.uId == uId
-                            ? AppTextButton(
-                                buttonText: 'Edit Profile',
-                                textStyle: AppTextStyles.font22MoreLightGrayBold
-                                    .copyWith(fontSize: 18.sp),
-                                onPressed: () {
-                                  context.pushNamed(Routes.editProfileScreen,
-                                      arguments: uId);
-                                },
-                              )
-                            : AppTextButton(
-                                buttonText: 'Send Message',
-                                textStyle: AppTextStyles.font22MoreLightGrayBold
-                                    .copyWith(fontSize: 18.sp),
-                                onPressed: () {
-                                  context.pushNamed(Routes.chatScreen,
-                                      arguments: userDate.uId);
-                                },
-                              ),
-                        SizedBox(
-                          height: 15.h,
-                        ),
-                        userDate.uId == uId
-                            ? AppTextButton(
-                                buttonText: 'Logout',
-                                textStyle: AppTextStyles.font22MoreLightGrayBold
-                                    .copyWith(fontSize: 18.sp),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          title: const Text('Are You Sure'),
-                                          content: const Text(
-                                            'Logout?',
-                                          ),
-                                          actions: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                MaterialButton(
-                                                  onPressed: () {
-                                                    CacheHelper.deleteData(
-                                                        'uId');
-                                                    context
-                                                        .pushNamedAndRemoveUntil(
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                  cubit.isLoading
+                      ? SizedBox()
+                      : Column(
+                          children: [
+                            userDate?.uId == uId
+                                ? AppTextButton(
+                                    buttonText: 'Edit Profile',
+                                    textStyle:
+                                        AppTextStyles.font18MoreLightGrayBold,
+                                    onPressed: () {
+                                      context.pushNamed(
+                                          Routes.editProfileScreen,
+                                          arguments: uId);
+                                    },
+                                  )
+                                : AppTextButton(
+                                    buttonText: 'Send Message',
+                                    textStyle:
+                                        AppTextStyles.font18MoreLightGrayBold,
+                                    onPressed: () {
+                                      context.pushNamed(Routes.chatScreen,
+                                          arguments: userDate?.uId);
+                                    },
+                                  ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            userDate?.uId == uId
+                                ? AppTextButton(
+                                    buttonText: 'Logout',
+                                    textStyle:
+                                        AppTextStyles.font18MoreLightGrayBold,
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              title: const Text('Are You Sure'),
+                                              content: const Text(
+                                                'Logout?',
+                                              ),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    MaterialButton(
+                                                      onPressed: () {
+                                                        CacheHelper.deleteData(
+                                                            'uId');
+                                                        context.pushNamedAndRemoveUntil(
                                                             Routes.loginScreen,
                                                             predicate: (Route<
                                                                         dynamic>
                                                                     route) =>
                                                                 false);
-                                                  },
-                                                  child: const Text(
-                                                    'Yes',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                MaterialButton(
-                                                  onPressed: () {
-                                                    context.pop();
-                                                  },
-                                                  child: const Text(
-                                                    'No',
-                                                  ),
+                                                      },
+                                                      child: const Text(
+                                                        'Yes',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                    MaterialButton(
+                                                      onPressed: () {
+                                                        context.pop();
+                                                      },
+                                                      child: const Text(
+                                                        'No',
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                },
-                              )
-                            : const SizedBox(),
-                      ],
-                    ),
-                  ),
+                                            );
+                                          });
+                                    },
+                                  )
+                                : const SizedBox(),
+                          ],
+                        ),
+                ],
+              ),
+            ),
           );
         },
       );
