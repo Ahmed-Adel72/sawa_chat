@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:sawa_chat/core/constants/app_constants.dart';
@@ -9,6 +10,105 @@ import 'package:sawa_chat/core/helpers/cache_helper.dart';
 
 class FirebaseAuthService {
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Initialize Flutter Local Notifications
+  static Future<void> initializeFlutterLocalNotifications(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
+
+    // Create notification channel
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'default_channel_id', // Channel ID
+      'Default Channel', // Channel Name
+      description: 'This channel is used for default notifications.',
+      importance: Importance.max,
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound(
+          'default'), // Make sure sound is specified
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
+  // When a notification is tapped
+  static void onDidReceiveNotificationResponse(
+      NotificationResponse notificationResponse) {
+    String? payload = notificationResponse.payload;
+    if (payload != null) {
+      print('Notification Payload: $payload');
+      // Handle navigation or any other action here
+    }
+  }
+
+  // Function to show a local notification
+  static Future<void> showLocalNotification({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'default_channel_id', 'Default Channel',
+      channelDescription: 'This is the default notification channel.',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound(
+          'default'), // Use default sound or custom sound file
+    );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+
+    // await flutterLocalNotificationsPlugin.show(
+    //   0, // Notification ID
+    //   title,
+    //   body,
+    //   platformChannelSpecifics,
+    //   payload: payload,
+    // );
+  }
+
+  // Listen to incoming Firebase messages
+  static void listenToFirebaseMessages() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showLocalNotification(
+          title: message.notification!.title ?? 'No Title',
+          body: message.notification!.body ?? 'No Body',
+          payload: 'Payload Example', // Customize as needed
+        );
+      }
+    });
+  }
+
+  static Future<void> firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    await Firebase.initializeApp();
+    if (message.notification != null) {
+      showLocalNotification(
+        title: message.notification!.title ?? 'No Title',
+        body: message.notification!.body ?? 'No Body',
+        payload: 'Payload Example', // Customize as needed
+      );
+    }
+  }
 
   static Future<void> getFirebaseMessagingToken() async {
     try {
@@ -120,6 +220,7 @@ class FirebaseAuthService {
                 "notification": {
                   "notification_priority": "PRIORITY_MAX",
                   "sound": "default",
+                  "channel_id": "default_channel_id"
                 }
               },
             },

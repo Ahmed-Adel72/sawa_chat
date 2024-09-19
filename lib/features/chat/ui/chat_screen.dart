@@ -69,11 +69,12 @@ class ChatScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       state is GetMessagesLoadingState
-                          ? const Expanded(
+                          ? Expanded(
                               child: Center(
                                   child: CircularProgressIndicator(
-                              color: AppColors.mainOrange,
-                            )))
+                                color: AppColors.mainOrange,
+                              )),
+                            )
                           : const ListOfMessages(),
                       SizedBox(
                         height: 5.h,

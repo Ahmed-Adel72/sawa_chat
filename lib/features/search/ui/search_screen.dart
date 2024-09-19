@@ -30,28 +30,44 @@ class SearchScreen extends StatelessWidget {
                 }
               },
               onChanged: (value) {
-                cubit.searchUsers(context, value.toString());
+                cubit.searchUsers(context, value.toString(), value!.isNotEmpty);
               },
             ),
             Expanded(
               child: BlocConsumer<SearchCubit, SearchStates>(
                 listener: (context, state) {},
                 builder: (context, state) {
-                  return ListView.builder(
-                      itemCount: cubit.user.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage('${cubit.user[index].image}'),
+                  return cubit.isSearching
+                      ? ListView.builder(
+                          itemCount: cubit.user.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage('${cubit.user[index].image}'),
+                              ),
+                              title: Text('${cubit.user[index].name}'),
+                              onTap: () {
+                                context.pushNamed(Routes.profileScreen,
+                                    arguments: cubit.user[index].uId);
+                              },
+                            );
+                          })
+                      : Padding(
+                          padding: EdgeInsets.only(top: 50.h),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              height: 300.h,
+                              width: 400.w,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("assets/images/search.png"),
+                                ),
+                              ),
+                            ),
                           ),
-                          title: Text('${cubit.user[index].name}'),
-                          onTap: () {
-                            context.pushNamed(Routes.profileScreen,
-                                arguments: cubit.user[index].uId);
-                          },
                         );
-                      });
                 },
               ),
             )

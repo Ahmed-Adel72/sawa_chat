@@ -18,13 +18,13 @@ class SignUpScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = SignUpCubit.get(context);
-
           return Container(
             decoration: const BoxDecoration(
+                color: Colors.white,
                 image: DecorationImage(
-              image: AssetImage("assets/images/register.png"),
-              fit: BoxFit.fill,
-            )),
+                  image: AssetImage("assets/images/register.png"),
+                  fit: BoxFit.fill,
+                )),
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Form(
@@ -48,7 +48,7 @@ class SignUpScreen extends StatelessWidget {
                                   }
                                 },
                                 textStyle:
-                                    AppTextStyles.font22MoreLightGrayBold,
+                                    AppTextStyles.font18MoreLightGrayBold,
                               ),
                         SizedBox(
                           height: 15.h,

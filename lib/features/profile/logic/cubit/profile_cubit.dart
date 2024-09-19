@@ -19,8 +19,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
   UserModel? userData;
 
+  bool isLoading = false;
   Future<void> getUserData({required String uid}) async {
     emit(GetUserDataLoadingState());
+    isLoading = true;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -30,8 +32,10 @@ class ProfileCubit extends Cubit<ProfileStates> {
       nameController.text = userData!.name.toString();
       bioController.text = userData!.bio.toString();
       emit(GetUserDataSuccessState());
+      isLoading = false;
     }).catchError((error) {
       print(error.toString());
+      isLoading = false;
       emit(GetUserDataErrorState());
     });
   }
